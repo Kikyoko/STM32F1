@@ -94,3 +94,10 @@ void UART_SendStr(USART_TypeDef * pUSARTx, char *str) {
     // 等待发送完成
     while (USART_GetFlagStatus(pUSARTx,USART_FLAG_TC) == RESET);
 }
+
+// 重定向 c 库函数 printf 到串口，重定向后可使用 printf 函数
+int fputc(int i_char, FILE *f) {
+    USART_SendData(DEBUG_USARTx, (u8)i_char);
+    while (USART_GetFlagStatus(DEBUG_USARTx, USART_FLAG_TXE) == RESET);
+    return(i_char);
+}
